@@ -9,12 +9,14 @@ node {
   // // Get some code from a GitHub repository
 
   // TODO: having to specify this outside script, seems backwards, might have my jenkins job configured wrong
+  //       more specifically, need to have workspaces per branch built, repo will be specified in jenkins job
+  //       need to have this script/workflow worked on different branches
   //git url: 'git@github.com:jessedavis/terraform-sandbox.git'
  
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
   env.PATH = "${tfHome}:${env.PATH}"
-  wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'xterm']) {
+  wrap([$class: 'AnsiColorBuildWrapper', colorMapName: 'XTerm']) {
  
     // Mark the code build 'plan'....
     stage name: 'Plan', concurrency: 1
@@ -50,23 +52,23 @@ node {
         //slackSend channel: '#ci', color: 'warning', message: "Plan Discarded: ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"
         apply = false
         currentBuild.result = 'UNSTABLE'
-     }
-   }
+      }
+    }
 
-   if (apply) {
-     stage name: 'Apply', concurrency: 1
-     unstash 'plan'
-     if (fileExists("status.apply")) {
-       sh "rm status.apply"
-     }
-     sh 'set +e; terraform apply plan.out; echo \$? &amp;gt; status.apply'
-     def applyExitCode = readFile('status.apply').trim()
-     if (applyExitCode == "0") {
-       //slackSend channel: '#ci', color: 'good', message: "Changes Applied ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"    
-     } else {
-       //slackSend channel: '#ci', color: 'danger', message: "Apply Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"
-       currentBuild.result = 'FAILURE'
-     }
+    if (apply) {
+      stage name: 'Apply', concurrency: 1
+      unstash 'plan'
+      if (fileExists("status.apply")) {
+        sh "rm status.apply"
+      }
+      sh 'set +e; terraform apply plan.out; echo \$? &amp;gt; status.apply'
+      def applyExitCode = readFile('status.apply').trim()
+      if (applyExitCode == "0") {
+        //slackSend channel: '#ci', color: 'good', message: "Changes Applied ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"    
+      } else {
+        //slackSend channel: '#ci', color: 'danger', message: "Apply Failed: ${env.JOB_NAME} - ${env.BUILD_NUMBER} ()"
+        currentBuild.result = 'FAILURE'
+      }
+    }
   }
-}
 }
