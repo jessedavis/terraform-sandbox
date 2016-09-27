@@ -7,7 +7,9 @@ node {
   stage 'Checkout'
 
   // // Get some code from a GitHub repository
-  git url: 'git@github.com:jessedavis/terraform-sandbox.git'
+
+  // TODO: having to specify this outside script, seems backwards, might have my jenkins job configured wrong
+  //git url: 'git@github.com:jessedavis/terraform-sandbox.git'
  
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
