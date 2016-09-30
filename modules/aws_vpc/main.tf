@@ -4,5 +4,6 @@ module "aws_vpc" {
 
     tags {
         Name = "${var.name}"
+        terraform = "true"
     }
 }

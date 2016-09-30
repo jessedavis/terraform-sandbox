@@ -1,6 +1,10 @@
 //
 // copied from https://objectpartners.com/2016/06/01/automating-terraform-projects-with-jenkins/
 //
+
+// TODO: AWS credentials currently in Jenkins config, improve that, also means init.sh needs to
+//       be run with correct credentials as well
+
 node {
  
   stage ('Checkout') {
@@ -16,9 +20,6 @@ node {
     sh "cp /data/jenkins/* ./creds"
   }
 
-  // TODO: determine environment from job
-  sh "bash ./creds/dev-aws-creds.sh"
- 
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
   env.PATH = "${tfHome}:${env.PATH}"
