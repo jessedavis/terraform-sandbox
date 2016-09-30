@@ -1,2 +1,3 @@
 creds/*
 !creds/README.md
+**/*.tfstate
