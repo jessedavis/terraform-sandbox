@@ -3,8 +3,7 @@
 //
 node {
  
-  // Mark the code checkout 'Checkout'....
-  stage 'Checkout' {
+  stage ('Checkout') {
     // TODO: // need to have workspaces per branch built, repo will be specified in jenkins job
     //       need to have this script/workflow worked on different branches
     // TODO: also determine how Jenkins generates this ID, seems fragile to have it
@@ -13,7 +12,7 @@ node {
   }
 
   // TODO: only copy in current environment credentials, or better, source
-  stage 'Copy Credentials' {
+  stage ('Copy Credentials') {
     sh "cp /data/jenkins/* ./creds"
   }
  
