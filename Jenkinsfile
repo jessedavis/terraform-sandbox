@@ -17,7 +17,7 @@ node {
   }
 
   // TODO: determine environment from job
-  sh "./creds/dev-aws-creds.sh"
+  sh "bash ./creds/dev-aws-creds.sh"
  
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
