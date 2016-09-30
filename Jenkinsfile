@@ -4,20 +4,18 @@
 node {
  
   // Mark the code checkout 'Checkout'....
-  stage 'Checkout'
-
-  // // Get some code from a GitHub repository
-
-  // TODO: having to specify this outside script, seems backwards, might have my jenkins job configured wrong
-  //       more specifically, need to have workspaces per branch built, repo will be specified in jenkins job
-  //       need to have this script/workflow worked on different branches
-  // TODO: also determine how Jenkins generates this ID, seems fragile to have it
-  // checked in
-  git url: 'git@github.com:jessedavis/terraform-sandbox.git', credentialsId: '4c31906d-75ad-4a83-a7f7-e22929f431ed'
+  stage 'Checkout' {
+    // TODO: // need to have workspaces per branch built, repo will be specified in jenkins job
+    //       need to have this script/workflow worked on different branches
+    // TODO: also determine how Jenkins generates this ID, seems fragile to have it
+    // checked in
+    git url: 'git@github.com:jessedavis/terraform-sandbox.git', credentialsId: '4c31906d-75ad-4a83-a7f7-e22929f431ed'
+  }
 
   // TODO: only copy in current environment credentials, or better, source
-  stage 'Copy Credentials'
-  sh "cp /data/jenkins/* ./creds"
+  stage 'Copy Credentials' {
+    sh "cp /data/jenkins/* ./creds"
+  }
  
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
