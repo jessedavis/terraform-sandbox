@@ -1,3 +1,4 @@
 creds/*
 !creds/README.md
 **/*.tfstate
+**/.terraform
