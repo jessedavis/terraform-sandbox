@@ -12,6 +12,10 @@ node {
   //       more specifically, need to have workspaces per branch built, repo will be specified in jenkins job
   //       need to have this script/workflow worked on different branches
   //git url: 'git@github.com:jessedavis/terraform-sandbox.git'
+
+  // TODO: only copy in current environment credentials, or better, source
+  stage 'Copy Credentials'
+  sh "cp /data/jenkins/* ./creds"
  
   // Get the Terraform tool.
   def tfHome = tool name: 'Terraform', type: 'com.cloudbees.jenkins.plugins.customtools.CustomTool'
@@ -22,6 +26,10 @@ node {
     stage name: 'Plan', concurrency: 1
     // Output Terraform version
     sh "terraform --version"
+
+    // TODO: determine environment from job
+    dir "./envs/dev"
+
     //Remove the terraform state file so we always start from a clean state
     if (fileExists(".terraform/terraform.tfstate")) {
       sh "rm -rf .terraform/terraform.tfstate"
@@ -29,7 +37,7 @@ node {
     if (fileExists("status")) {
       sh "rm status"
     }
-    sh "./init"
+    sh "./init.sh"
     sh "terraform get"
     sh "set +e; terraform plan -out=plan.out -detailed-exitcode; echo \$? &gt; status"
     def exitCode = readFile('status').trim()
